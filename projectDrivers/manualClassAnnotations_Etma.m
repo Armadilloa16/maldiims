@@ -3,15 +3,7 @@ clear all
 close all
 
 % Add my code folders.
-addpath('./functionMfiles/dataManagement',...
-    './functionMfiles/analysisFunctions',...
-    './functionMfiles/plottingFunctions')
-% Some of Steve Marrons code, most particularly pcaSM for PCA.
-addpath('./functionMfiles/codeSM/General',...
-    './functionMfiles/codeSM/BatchAdjust',...
-    './functionMfiles/codeSM/Smoothing')
-% Some other peoples code I have used.
-addpath('./functionMfiles/otherPeoplesCode')        
+addCodePaths    
 
 [isOctave,matType,matExt] = checkIsOctave();
 
