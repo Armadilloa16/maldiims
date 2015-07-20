@@ -7,8 +7,7 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
 % 
 
     matFileFolder = './dataMATfiles/';
-    regexpVars = '';
-    
+
     switch dataType
         case 'Dataset Index'
             mFileNam = [matFileFolder 'datasetNames'];
@@ -16,8 +15,11 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
             
         case 'Supplementary Data'
             mFileNam = [matFileFolder 'supplementaryData'];
-            regexpVars = 'metaData';
+            regexpVars = 'useAltSeed4clus|metaData';
             
+        case 'Etma Clinical Data'
+            mFileNam = [matFileFolder 'Etma_clinical_data'];
+            regexpVars = 'p_list|p_lnm|p_suit|p_lvsi|p_grade|p_size|p_FIGO_old|p_FIGO_old_lvls|p_FIGO_new|p_FIGO_new_lvls|p_T_old|p_T_old_lvls|p_T_new|p_T_new_lvls|p_myo_inv|p_myo_thi|p_ser_dis';
             
         otherwise
             dataTypeNam = dataTypeNamSelect(dataType,paramStruct);
@@ -27,11 +29,8 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
                 case 'Raw'
                     regexpVars = 'L|X|Y|R|emptySpec|fExists|LXY|XYL|Vars';
 
-                case 'Classes'
-                    regexpVars = 'p_number|classes|classNams';
-
                 case 'Annotation'
-                    regexpVars = 'annot_gurjeet|annot_martin|annotNams';
+                    regexpVars = 'p_number|annot_cancer';
 
                 case 'Binned'
                     if ~isfield(paramStruct,'smoothParam')
@@ -57,7 +56,7 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
                 case 'Normalisation'
                     regexpVars = 'Shat|nCal|meanCalIntensity|CV';
 
-                case 'PCA'
+                case {'PCA','pPCA'}
                     regexpVars = 'veigval|meigvec|vmean|mpc';
                     
                 case 'Clus'
@@ -70,13 +69,28 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
                     end
                     
                 case 'rSummary'
-                    regexpVars = 'nSpec|rdata|r_list|r_list_count|r_number';
+                    if ~isfield(paramStruct,'dataType')
+                        regexpVars = 'rdata|nSpec|r_list|r_list_count';
+                    elseif strcmp(paramStruct.dataType,'Binary')
+                        regexpVars = 'rdata|nSpec|r_list|r_list_count';
+                    else
+                        regexpVars = 'rdata';
+                    end
+                        
+                case 'pSummary'
+                    if ~isfield(paramStruct,'dataType')
+                        regexpVars = 'pdata|p_list|p_lnm|p_suit|nSpec|vbincentrs';
+                    elseif strcmp(paramStruct.dataType,'Binary')
+                        regexpVars = 'pdata|p_list|p_lnm|p_suit|nSpec|vbincentrs';
+                    else
+                        regexpVars = 'pdata';
+                    end
+                    
+                case 'pClassification'
+                    regexpVars = 'class_out|dvec|b|class_out_LOO|dvec_LOO|b_LOO';
                     
             end
            
-    end
-    
-    regexpVars = ['^' strjoin(regexp(regexpVars,'\|','split'),'$|^') '$'];
-    
+    end 
     
 end

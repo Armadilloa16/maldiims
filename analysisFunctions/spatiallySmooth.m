@@ -1,27 +1,29 @@
-function [mbdata,vbincentrs,fExists,emptySpec,nIter,converged] = spatiallySmooth(mbdata,vbincentrs,fExists,emptySpec,smoothParam)
+function [mbdata,vbincentrs,fExists,emptySpec,nIter,converged] = spatiallySmooth(mbdata,vbincentrs,fExists,emptySpec,smoothParam,maxNiter)
     
-    maxNiter = 50;
-
+    if nargin < 6
+        maxNiter = 50;
+    end
+    
     if size(mbdata,2) ~= sum(sum(fExists))
         error('error: WTF Seriously.')
     end
-    if sum(sum((fExists+emptySpec)==1)) == sum(sum(fExists)) + sum(sum(emptySpec))
-        fExists_new = (fExists+emptySpec) == 1;
-        % Create XYL
-        XYL = double(fExists_new);
-        XYL(fExists_new) = 1:sum(sum(fExists_new));
-        % Remember which ones are the old spectra
-        spec_old = XYL(fExists);
-        fExists = fExists_new;
-        clear fExists_new
-        % Add empty spectra to mbdata
-        temp = mbdata;
-        mbdata = false(size(mbdata,1),sum(sum(fExists)));
-        mbdata(:,spec_old) = temp;
-        clear temp spec_old
-    else
+    if sum(sum((fExists+emptySpec)==1)) ~= sum(sum(fExists)) + sum(sum(emptySpec))
         error('error: Seriously. Fucking Seriously.')
     end
+    
+    fExists_new = (fExists+emptySpec) == 1;
+    % Create XYL
+    XYL = double(fExists_new);
+    XYL(fExists_new) = 1:sum(sum(fExists_new));
+    % Remember which ones are the old spectra
+    spec_old = XYL(fExists);
+    fExists = fExists_new;
+    clear fExists_new
+    % Add empty spectra to mbdata
+    temp = mbdata;
+    mbdata = false(size(mbdata,1),sum(sum(fExists)));
+    mbdata(:,spec_old) = temp;
+    clear temp spec_old
     
 	% Create LXY
 	LXY = zeros(sum(sum(fExists)),3);

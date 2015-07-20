@@ -1,4 +1,4 @@
-function plotClusters(clus,curDataParams,tnam,altCols,colChoice,highlight)
+function plotClusters(clus,curDataParams,tnam,altCols,highlight)
     
     if nargin > 3
         if length(altCols) ~= max(clus)
@@ -30,10 +30,10 @@ function plotClusters(clus,curDataParams,tnam,altCols,colChoice,highlight)
     end
     clear emptySpec
         
-    if nargin > 5
-        clusMAP = L2XYclusPlot(clus,fExists,swapXY,colChoice,highlight);
+    if nargin > 4
+        clusMAP = L2XYclusPlot(clus,fExists,swapXY,highlight);
     else
-        clusMAP = L2XYclusPlot(clus,fExists,swapXY,colChoice);
+        clusMAP = L2XYclusPlot(clus,fExists,swapXY);
     end
     
     if swapXY

@@ -1,11 +1,13 @@
-function map = L2XYclusPlot(y,fExists,swapXY,colChoice,highlight)
+function map = L2XYclusPlot(y,fExists,swapXY,highlight)
 
     if length(y) ~= sum(sum(fExists))
         error('ERROR: !!! incorrect number of spectra input into L2XY')
     elseif sum(y==0)+sum(y==1)+sum(y==2)+sum(y==3)+sum(y==4)+sum(y==5)+sum(y==6) ~= sum(sum(fExists))
         error('ERROR: !!! incorrect format for 4clus')
     end
-        
+    
+    colChoice = 1;
+    
     switch colChoice
         case 1
             % 1 - Pink/Purple -- off tissue
@@ -21,7 +23,7 @@ function map = L2XYclusPlot(y,fExists,swapXY,colChoice,highlight)
             C = C(1:nCol);
             L = L(1:nCol);
             H = H(1:nCol);
-            if nargin > 4
+            if nargin > 3 
                 if sum(y == highlight) > 0
                     L = L + 10;
                     C = C - 50;
@@ -67,26 +69,6 @@ function map = L2XYclusPlot(y,fExists,swapXY,colChoice,highlight)
             
             RGB = repmat((0:((1-(1/nCol))/(nCol-1)):(1-(1/nCol)))',1,3);    
 %             RGB = RGB([1 3 4 2],:);
-            
-        case 5
-            nCol = max(y);            
-            C = [100,80,80,80,80,10];
-            L = [80,85,85,85,80,85];
-            H = [300,180,60,120,240,270];
-            C = C(1:nCol);
-            L = L(1:nCol);
-            H = H(1:nCol);
-            if nargin > 4
-                if sum(y == highlight) > 0
-                    L = L + 10;
-                    C = C - 50;
-                    L(highlight) = L(highlight) - 10;
-                    C(highlight) = C(highlight) + 50; 
-                else
-                    error('no no no no no')
-                end
-            end
-            RGB = hcl2rgb([H',C',L']);
             
     end
             

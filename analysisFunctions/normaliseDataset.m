@@ -1,10 +1,10 @@
-function [Shat,nCal,meanCalIntensity,CV] = normaliseDataset(L,LXY,Vars,calibrantMZ,tol,var,includeCV)
+function [Shat,nCal,meanCalIntensity,CV] = normaliseDataset(L,LXY,Vars,calibrantMZ,tol,var,includeCV,ppmTol)
 % Normalisation to internal calibrants
 
 [isOctave,matType,matExt] = checkIsOctave();
 
 if nargin < 5
-    tol = 0.125;
+    tol = 50;
 end
 if nargin < 6
    var = 'intensity';
@@ -12,10 +12,14 @@ end
 if nargin < 7
     includeCV = true(1,1);
 end
+if nargin < 8
+    ppmTol = true;
+end
 
 CV = struct();
 CV.calibrantMZ = calibrantMZ;
 CV.tol = tol;
+CV.ppmTol = ppmTol;
 
 % Initialise matrix for storing calibrant intensities.
 calibrantIntensities = zeros(length(calibrantMZ),length(L));
@@ -40,7 +44,11 @@ end
 for cal_idx = 1:length(calibrantMZ)
     % Look within a plus/minus tol Da window of the true calibrant
     % mass for peaks.
-    subset_bin = abs(allPeaks(:,3)-calibrantMZ(cal_idx)) < tol;
+    if ppmTol
+        subset_bin = abs(allPeaks(:,3)-calibrantMZ(cal_idx)) <= tol*calibrantMZ(cal_idx)/1000000;
+    else
+        subset_bin = abs(allPeaks(:,3)-calibrantMZ(cal_idx)) <= tol;
+    end
     unique_spectra = unique(allPeaks(subset_bin,1));
     % Check to see if there are any spectra which contain more than 1
     % peak within that window.
@@ -66,15 +74,15 @@ end
 % Regression 
 X = zeros(size(calibrantIntensities));
 X(calibrantIntensities>0) = log(calibrantIntensities(calibrantIntensities>0));
+nCal = sum(X>0);
 Xbar = zeros(size(X,1),1);
 for i = 1:size(X,1)
     Xbar(i) = mean(X(i,X(i,:) > 0));
 end
 Shat = zeros(1,size(X,2));
-for j = 1:size(X,2)
+for j = find(nCal > 0)
     Shat(j) = mean(X(X(:,j)>0,j) - Xbar(X(:,j)>0));
 end
-nCal = sum(X>0);
 meanCalIntensity = mean(Xbar);
 
 % CV
