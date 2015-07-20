@@ -12,5 +12,7 @@ data.
 ./otherPeoplesCode contains some code written by various other people I 
 have used as well.
 
+./projectDrivers contains the driver scripts for running the analyses 
+in my thesis.
 
 
