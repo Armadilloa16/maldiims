@@ -14,6 +14,10 @@ function [class_out,d,b] = maldiDA(X,class,method,Xtest)
     valid_vars = var(X(:,class>0),0,2)>eps;
     if sum(valid_vars) == 0
         d = nan(size(valid_vars));
+        if nargin == 4
+            class_out = nan(1,size(Xtest,2));
+            return
+        end        
         class_out = nan(1,size(X,2));
         return
     end

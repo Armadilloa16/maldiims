@@ -21,6 +21,10 @@ function [mFileNam,regexpVars] = matFileNamSelect(dataType,paramStruct)
             mFileNam = [matFileFolder 'Etma_clinical_data'];
             regexpVars = 'p_list|p_lnm|p_suit|p_lvsi|p_grade|p_size|p_FIGO_old|p_FIGO_old_lvls|p_FIGO_new|p_FIGO_new_lvls|p_T_old|p_T_old_lvls|p_T_new|p_T_new_lvls|p_myo_inv|p_myo_thi|p_ser_dis';
             
+        case 'Vtma Clinical Data'
+            mFileNam = [matFileFolder 'Vtma_clinical_data'];
+            regexpVars = 'p_list|p_lnm|p_suit|p_grade';
+
         otherwise
             dataTypeNam = dataTypeNamSelect(dataType,paramStruct);
             mFileNam = [matFileFolder paramStruct.folNam dataTypeNam];
